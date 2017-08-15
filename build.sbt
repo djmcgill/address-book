@@ -1,5 +1,3 @@
-import Dependencies._
-
 lazy val root = (project in file(".")).
   settings(
     inThisBuild(List(
@@ -8,5 +6,9 @@ lazy val root = (project in file(".")).
       version      := "0.1.0-SNAPSHOT"
     )),
     name := "AddressBook",
-    libraryDependencies += scalaTest % Test
+    libraryDependencies ++= List(
+      "com.github.tototoshi" %% "scala-csv" % "1.3.4",
+      "com.typesafe" % "config" % "1.3.1",
+      "org.scalatest" %% "scalatest" % "3.0.3" % Test
+    )
   )
