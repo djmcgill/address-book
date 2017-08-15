@@ -11,7 +11,7 @@ import scala.util.{Failure, Try}
 object Record {
   final val DobFormat = DateTimeFormatter.ofPattern("dd/MM/yy")
 
-  def parse(fields: Seq[String]): Try[Record] = fields match {
+  def parse(fields: Seq[String]): Try[Record] = fields.map(_.trim) match {
     case Seq(name, gender, dob) => Try {
       val rawDob = LocalDate.parse(dob, DobFormat)
       val pastDob = if (rawDob.isAfter(LocalDate.now)) rawDob.minusYears(100) else rawDob

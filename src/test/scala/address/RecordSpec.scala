@@ -43,6 +43,14 @@ class RecordSpec extends WordSpec with Matchers {
       actualOutput.success.value shouldBe expectedOutput
     }
 
+    "trim all fields before parsing" in {
+      val input = Seq("   Bill McKnight  ", "  Male  ", "     16/03/11")
+      val expectedOutput = Record("Bill McKnight", Gender.Male, LocalDate.parse("2011-03-16"))
+      val actualOutput = Record.parse(input)
+
+      actualOutput.success.value shouldBe expectedOutput
+    }
+
     "fail to parse an invalid date" in {
       val input = Seq("Bill McKnight", "Male", "16/03/XX")
       val actualOutput = Record.parse(input)
