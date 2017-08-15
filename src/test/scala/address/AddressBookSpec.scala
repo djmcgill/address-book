@@ -1,0 +1,5 @@
+package address
+
+class AddressBookSpec {
+
+}

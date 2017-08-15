@@ -1,10 +1,9 @@
-package address
+package address.model
 
 import java.time.LocalDate
 
-import address.model.{Gender, Record}
-import org.scalatest._
 import org.scalatest.TryValues._
+import org.scalatest._
 
 class RecordSpec extends WordSpec with Matchers {
   "Record" should {
