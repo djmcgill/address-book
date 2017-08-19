@@ -9,11 +9,18 @@ import scala.util.Try
 // big enough that you don't necessarily want to keep it in memory
 // and scan over it several times. If this is not the case, then
 // this solution is extremely over-engineered.
-object AddressBook extends App with AddressBookParser with RecordsAnalyser with AnalysisPrinter {
+object AddressBook
+    extends App
+    with AddressBookParser
+    with RecordsAnalyser
+    with AnalysisPrinter {
 
   val records: Iterator[Try[Record]] =
-    parseRecordBook().recover{ case ex =>
-      throw new IllegalStateException(s"Could not open the recordbook file with:", ex)
+    parseRecordBook().recover {
+      case ex =>
+        throw new IllegalStateException(
+          s"Could not open the recordbook file with:",
+          ex)
     }.get
 
   // Since we 1) want to stop if any record fails to parse, and
@@ -21,15 +28,20 @@ object AddressBook extends App with AddressBookParser with RecordsAnalyser with 
   // analyseRecords method c.f. The Curse of the Excluded Middle by Erik Meijer
   val analysis: Analysis = Try {
     val allRecords: Iterator[Record] =
-      records.map( tryRecord =>
-        tryRecord.recover { case ex =>
-          throw new IllegalArgumentException(s"Could not parse a record with:", ex)
-        }.get
-      )
+      records.map(tryRecord =>
+        tryRecord.recover {
+          case ex =>
+            throw new IllegalArgumentException(
+              s"Could not parse a record with:",
+              ex)
+        }.get)
     analyseRecords(allRecords)
-  }
-  .recover{case ex => throw new IllegalArgumentException(s"Could not analyse the records with:", ex)}
-  .get
+  }.recover {
+    case ex =>
+      throw new IllegalArgumentException(
+        s"Could not analyse the records with:",
+        ex)
+  }.get
 
   printAnalysis(analysis)
 }

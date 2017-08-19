@@ -2,8 +2,7 @@ package address.measures.record
 
 import address.measures.Measure
 
-case class MinBy[A, +B](f: A => B,
-                    override val result: Option[A] = None)(
+case class MinBy[A, +B](f: A => B, override val result: Option[A] = None)(
     implicit cmp: Ordering[B]
 ) extends Measure[A, Option[A]] {
 

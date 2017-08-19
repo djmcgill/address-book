@@ -6,7 +6,6 @@ import address.measures.{Measure, QuadMeasure}
 import address.measures.record.{Count, First, MinBy}
 import address.model.{Analysis, Gender, Record}
 
-
 import scala.collection.TraversableOnce
 import scala.util.{Failure, Success}
 
@@ -17,7 +16,9 @@ trait RecordsAnalyser {
   def analyseRecords(records: TraversableOnce[Record]): Analysis = {
     import Config.LocalDateOrdering
 
-    val measure: Measure[Record, (Long, Option[Record], Option[Record], Option[Record])] =
+    val measure: Measure[
+      Record,
+      (Long, Option[Record], Option[Record], Option[Record])] =
       QuadMeasure(
         Count(_.gender == Gender.Male),
         MinBy(_.dob),
@@ -29,10 +30,18 @@ trait RecordsAnalyser {
       Measure.calculate(records)(measure)
 
     val ageDifference = (bills, pauls) match {
-      case (Some(bill), Some(paul)) => Success(DAYS.between(bill.dob, paul.dob))
-      case (None, Some(_)) => Failure(new IllegalArgumentException(s"Could not find $YoungerFirstName"))
-      case (Some(_), None) => Failure(new IllegalArgumentException(s"Could not find $OlderFirstName"))
-      case _ => Failure(new IllegalArgumentException(s"Could not find $OlderFirstName or $YoungerFirstName"))
+      case (Some(bill), Some(paul)) =>
+        Success(DAYS.between(bill.dob, paul.dob))
+      case (None, Some(_)) =>
+        Failure(
+          new IllegalArgumentException(s"Could not find $YoungerFirstName"))
+      case (Some(_), None) =>
+        Failure(
+          new IllegalArgumentException(s"Could not find $OlderFirstName"))
+      case _ =>
+        Failure(
+          new IllegalArgumentException(
+            s"Could not find $OlderFirstName or $YoungerFirstName"))
     }
 
     Analysis(
