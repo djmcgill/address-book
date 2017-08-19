@@ -1,14 +1,13 @@
 package address.measures.record
 
 import address.measures.Measure
-import address.model.Record
 
-case class MinBy[B](f: Record => B,
-                    override val result: Option[Record] = None)(
+case class MinBy[A, +B](f: A => B,
+                    override val result: Option[A] = None)(
     implicit cmp: Ordering[B]
-) extends Measure[Record, Option[Record]] {
+) extends Measure[A, Option[A]] {
 
-  override def withNext(elem: Record): MinBy[B] = {
+  override def withNext(elem: A): MinBy[A, B] = {
     val candidates = result.toList :+ elem
     val minCandidate = candidates.minBy(f)
     this.copy(result = Some(minCandidate))
