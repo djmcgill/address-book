@@ -2,6 +2,7 @@ package address
 
 import address.model.{Analysis, Record}
 
+import scala.io.Source
 import scala.util.Try
 
 // This application reads and analyses an Address Book CSV file
@@ -16,12 +17,15 @@ object AddressBook
     with AnalysisPrinter {
 
   val records: Iterator[Try[Record]] =
-    parseRecordBook().recover {
-      case ex =>
-        throw new IllegalStateException(
-          s"Could not open the recordbook file with:",
-          ex)
-    }.get
+    Try(Source.fromResource(Config.addressBookFileName))
+      .flatMap(source => parseRecordBook(source))
+      .recover {
+        case ex =>
+          throw new IllegalStateException(
+            s"Could not open the recordbook file with:",
+            ex)
+      }
+      .get
 
   // Since we 1) want to stop if any record fails to parse, and
   // 2) parse the records lazily, the exception will be thrown from inside the

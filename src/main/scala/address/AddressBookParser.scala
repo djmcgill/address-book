@@ -7,13 +7,8 @@ import scala.io.Source
 import scala.util.Try
 
 trait AddressBookParser {
-  def parseRecordBook(): Try[Iterator[Try[Record]]] = {
-    val tryIterator = Try {
-      val addressBookSource = Source.fromResource(Config.addressBookFileName)
-      CSVReader
-        .open(addressBookSource)
-        .iterator
-    }
+  def parseRecordBook(source: Source): Try[Iterator[Try[Record]]] = {
+    val tryIterator = Try(CSVReader.open(source).iterator)
     tryIterator.map(_.map(Record.parse))
   }
 }

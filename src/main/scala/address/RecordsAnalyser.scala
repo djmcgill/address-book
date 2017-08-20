@@ -7,7 +7,7 @@ import address.measures.record.{Count, First, MinBy}
 import address.model.{Analysis, Gender, Record}
 
 import scala.collection.TraversableOnce
-import scala.util.{Failure, Success}
+import scala.util.{Failure, Success, Try}
 
 trait RecordsAnalyser {
   final val OlderFirstName = "Bill"
@@ -29,7 +29,16 @@ trait RecordsAnalyser {
     val (menCount, maybeOldestName, bills, pauls) =
       Measure.calculate(records)(measure)
 
-    val ageDifference = (bills, pauls) match {
+    Analysis(
+      menCount = menCount,
+      oldestPersonName = maybeOldestName.map(_.name),
+      billPaulAgeDifference = getAgeDifference(bills, pauls)
+    )
+  }
+
+  private def getAgeDifference(bills: Option[Record],
+                               pauls: Option[Record]): Try[Long] =
+    (bills, pauls) match {
       case (Some(bill), Some(paul)) =>
         Success(DAYS.between(bill.dob, paul.dob))
       case (None, Some(_)) =>
@@ -43,11 +52,4 @@ trait RecordsAnalyser {
           new IllegalArgumentException(
             s"Could not find $OlderFirstName or $YoungerFirstName"))
     }
-
-    Analysis(
-      menCount = menCount,
-      oldestPersonName = maybeOldestName.map(_.name),
-      billPaulAgeDifference = ageDifference
-    )
-  }
 }

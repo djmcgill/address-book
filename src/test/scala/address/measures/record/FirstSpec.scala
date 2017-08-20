@@ -6,7 +6,7 @@ import org.scalatest.{Matchers, WordSpec}
 class FirstSpec extends WordSpec with Matchers {
   "The First measure" should {
     "return None on an empty list" in {
-      Measure.calculate(Nil)(First(_ => true)) shouldBe None
+      Measure.calculate(Nil: List[Int])(First(_ => true)) shouldBe None
     }
 
     "return Some on a single element list with an always true predicate" in {
